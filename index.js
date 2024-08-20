@@ -1,35 +1,42 @@
-import express, { query } from "express";
-import { imagePreview, imageDownload } from "./file.js";
+import express from "express";
+import fileRouter from "./src/api/files/files.routes.js";
+import { PORT } from "./src/config.js";
 
 const app = express();
 
-app.get("/", function (req, res) {
-  res.send("Hello World");
+app.use("/files", fileRouter);
+
+app.get("/", (req, res) => {
+  res.send({ message: "Welcome to Makker file Server" });
 });
 
-app.get("/download/:fieldId", function (req, res) {
-  const fieldId = req?.params?.fieldId;
-  let mode = req?.query?.mode;
-  mode = !mode ? "download" : mode;
-  console.log(mode);
-  if (!fieldId) {
-    res.statusMessage = "Bad request";
-    res.status(400).end();
-  }
-  console.log(mode);
-  if (mode === "download") {
-    res.download(imageDownload(fieldId));
-    res.contentType("image/png");
-  } else {
-    return imagePreview(fieldId, res);
-  }
+const server = app.listen(PORT, () => {
+  console.log(`App is running on port http://localhost:${PORT}`);
 });
 
-app.listen(5009);
-console.log("App started");
-
+// Gracefully handle uncaught exceptions
 process.on("uncaughtException", (err) => {
-  console.log(err.name, err.message);
-  console.log("UNCAUGHT EXCEPTION! 💥 Shutting down...");
+  console.error("UNCAUGHT EXCEPTION! 💥 Shutting down...");
+  console.error(err.name, err.message);
   process.exit(1);
+});
+
+// Gracefully handle unhandled promise rejections
+process.on("unhandledRejection", (err) => {
+  console.error("UNHANDLED REJECTION! 💥 Shutting down...");
+  console.error(err.name, err.message);
+  server.close(() => {
+    process.exit(1);
+  });
+});
+
+// Gracefully handle termination signals
+["SIGTERM", "SIGINT"].forEach((signal) => {
+  process.on(signal, () => {
+    console.log(`Received ${signal}. Shutting down gracefully...`);
+    server.close(() => {
+      console.log("Server closed.");
+      process.exit(0);
+    });
+  });
 });
