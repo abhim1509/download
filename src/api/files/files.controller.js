@@ -18,8 +18,8 @@ export const getFileById = async (req, res) => {
       });
     }
     // Set appropriate content type for preview (e.g., "image/png" or "image/jpeg")
-    res.contentType("image/png"); // Change this according to your file type
-
+    // res.contentType("image/png"); // Change this according to your file type
+    // res.contentType("application/pdf");
     const readStream = fs.createReadStream(filePath);
 
     readStream.pipe(res).on("error", (err) => {
@@ -32,4 +32,9 @@ export const getFileById = async (req, res) => {
       error: err instanceof Error ? err.message : "An unknown error occurred",
     });
   }
+};
+
+export const uploadFile = async (req, res, next) => {
+  // console.log("Request", req);
+  res.send("uploaded successfully");
 };
