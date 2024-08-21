@@ -1,5 +1,11 @@
 import * as fs from "fs";
-import { getFile } from "../../services/files/file.service.js";
+import {
+  getFile,
+  deleteFile,
+  getFilePath,
+  archivePath,
+  moveFile,
+} from "../../services/files/file.service.js";
 
 export const getFileById = async (req, res) => {
   try {
@@ -37,4 +43,45 @@ export const getFileById = async (req, res) => {
 export const uploadFile = async (req, res, next) => {
   // console.log("Request", req);
   res.send("uploaded successfully");
+};
+
+export const deleteFileById = async (req, res) => {
+  try {
+    const { fileId } = req.params;
+    const mimetype =
+      fileId.split(".")[1] === "jpg" ? "image/jpeg" : "application/pdf";
+    const result = await deleteFile(`${getFilePath(mimetype)}/${fileId}`);
+
+    if (!result) {
+      res.status(404);
+      res.send("File not found.");
+      return res;
+    }
+    res.status(201);
+    res.send("File deleted successfully");
+  } catch (err) {
+    console.error("Error occurred:", err);
+    res.status(500).json({
+      error: err instanceof Error ? err.message : "An unknown error occurred",
+    });
+  }
+};
+
+export const archiveFileById = (req, res) => {
+  try {
+    const { fileId } = req.params;
+    const mimetype =
+      fileId.split(".")[1] === "jpg" ? "image/jpeg" : "application/pdf";
+    const src = `${getFilePath(mimetype)}/${fileId}`;
+    const dest = `${archivePath}/${fileId}`;
+    const result = moveFile(src, dest);
+
+    res.status(200);
+    res.send("File moved successfully");
+  } catch (err) {
+    console.error("Error occurred:", err);
+    res.status(500).json({
+      error: err instanceof Error ? err.message : "An unknown error occurred",
+    });
+  }
 };
