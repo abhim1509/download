@@ -5,7 +5,7 @@ import {
   deleteFileById,
   archiveFileById,
 } from "./files.controller.js";
-import { upload } from "../../middlewares/multer.js";
+import { upload } from "../../middlewares/fileUpload.js";
 const fileRouter = Router();
 
 fileRouter.get("/:fileId", getFileById);

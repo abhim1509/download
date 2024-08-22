@@ -41,13 +41,15 @@ export const getFilePath = (mimetype) => {
 };
 
 export const deleteFile = (path, file) => {
-  if (!fs.existsSync(path + `/${file}`)) {
+  const filePath = `${path}/${file}`;
+  console.log(filePath);
+  if (!fs.existsSync(filePath)) {
     return Promise.resolve("");
   }
   return new Promise((resolve, reject) => {
-    fs.unlink(file, (err) => {
+    fs.unlink(filePath, (err) => {
       if (err) reject(err);
-      resolve(`Deleted ${file}`);
+      resolve(`Deleted ${filePath}`);
     });
   });
 };
@@ -60,7 +62,22 @@ export const moveFile = (src, dest) => {
   from.on("end", function () {
     return "File moved successfully.";
   });
-  // source.on("error", function (err) {
-  //   throw new Error("An error occured while moving file", err);
-  // });
+  from.on("error", function (err) {
+    throw new Error("An error occured while moving file" + err);
+  });
+};
+
+export const mimeMapping = (ext) => {
+  switch (ext) {
+    case "jpg":
+      return "image/jpeg";
+    case "pdf":
+      return "application/pdf";
+    default:
+      return null;
+  }
+};
+
+export const getFileExtension = (fileName) => {
+  return fileName.split(".")[1];
 };

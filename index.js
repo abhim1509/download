@@ -1,8 +1,10 @@
-import express from "express";
+import express, { json } from "express";
 import fileRouter from "./src/api/files/files.routes.js";
 import { PORT } from "./src/config.js";
-
+import compression from "compression";
+import { logger } from "./src/services/files/logger.service.js";
 const app = express();
+app.use(compression());
 
 app.use("/files", fileRouter);
 
@@ -11,20 +13,19 @@ app.get("/", (req, res) => {
 });
 
 const server = app.listen(PORT, () => {
-  console.log(`App is running on port http://localhost:${PORT}`);
+  logger.info(`App is running on port http://localhost:${PORT}`);
 });
 
 // Gracefully handle uncaught exceptions
 process.on("uncaughtException", (err) => {
-  console.error("UNCAUGHT EXCEPTION! 💥 Shutting down...");
-  console.error(err.name, err.message);
+  logger.error(`UNCAUGHT EXCEPTION: ${JSON.stringify(err)}`);
   process.exit(1);
 });
 
 // Gracefully handle unhandled promise rejections
 process.on("unhandledRejection", (err) => {
-  console.error("UNHANDLED REJECTION! 💥 Shutting down...");
-  console.error(err.name, err.message);
+  logger.error(`UNCAUGHT REJECTION: ${JSON.stringify(err)}`);
+
   server.close(() => {
     process.exit(1);
   });
@@ -33,7 +34,8 @@ process.on("unhandledRejection", (err) => {
 // Gracefully handle termination signals
 ["SIGTERM", "SIGINT"].forEach((signal) => {
   process.on(signal, () => {
-    console.log(`Received ${signal}. Shutting down gracefully...`);
+    logger.error(`Received ${signal}. Shutting down gracefully...`);
+
     server.close(() => {
       console.log("Server closed.");
       process.exit(0);

@@ -5,6 +5,8 @@ import {
   getFilePath,
   archivePath,
   moveFile,
+  mimeMapping,
+  getFileExtension,
 } from "../../services/files/file.service.js";
 
 export const getFileById = async (req, res) => {
@@ -13,7 +15,7 @@ export const getFileById = async (req, res) => {
     const { mode = "preview" } = req.query;
 
     const filePath = getFile(fileId);
-
+    console.log(filePath);
     if (mode === "download") {
       res.contentType("application/octet-stream"); // Forces download
       return res.download(filePath, (err) => {
@@ -67,19 +69,20 @@ export const deleteFileById = async (req, res) => {
   }
 };
 
-export const archiveFileById = (req, res) => {
+export const archiveFileById = async (req, res) => {
   try {
     const { fileId } = req.params;
-    const mimetype =
-      fileId.split(".")[1] === "jpg" ? "image/jpeg" : "application/pdf";
+    const mimetype = mimeMapping(getFileExtension(fileId));
     const src = `${getFilePath(mimetype)}/${fileId}`;
+    console.log(src);
     const dest = `${archivePath}/${fileId}`;
     const result = moveFile(src, dest);
+    await deleteFile(getFilePath(mimetype), fileId);
 
     res.status(200);
     res.send("File moved successfully");
   } catch (err) {
-    console.error("Error occurred:", err);
+    console.error("Error occurred:", JSON.stringify(err));
     res.status(500).json({
       error: err instanceof Error ? err.message : "An unknown error occurred",
     });
