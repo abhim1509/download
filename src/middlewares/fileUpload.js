@@ -8,6 +8,7 @@ import {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    console.log("Inside middleware diskstorage");
     switch (file.mimetype) {
       case "application/pdf":
         cb(null, documentsPath);
@@ -16,7 +17,8 @@ const storage = multer.diskStorage({
         cb(null, imagesPath);
         break;
       default:
-        cb({ error: "Mime type not supported" });
+        // throw new Error("Mime type not supported.");
+        cb("Mime type not supported");
     }
   },
   filename: (req, file, cb) => {
@@ -25,8 +27,15 @@ const storage = multer.diskStorage({
       filePath,
       file.originalname
     );
-    cb(null, fileName);
+    console.log(filePath, fileName);
+    if (mimeMapping(fileName)) {
+      cb(null, fileName);
+    } else {
+      cb(null, false);
+      return cb(new Error("Only .jpg, pdf format allowed!"));
+    }
   },
 });
 
+console.log("Storage", storage);
 export const upload = multer({ storage: storage });
