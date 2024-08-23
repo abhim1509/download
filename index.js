@@ -9,9 +9,10 @@ app.use(compression());
 app.use("/files", fileRouter);
 
 app.get("/", (req, res) => {
-  res.send({ message: "Welcome to Makker file Server" });
+  res.send({ message: "Welcome to file Server" });
 });
 
+//Starts a server.
 const server = app.listen(PORT, () => {
   logger.info(`App is running on port http://localhost:${PORT}`);
 });

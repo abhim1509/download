@@ -22,7 +22,6 @@ export const updateFileNameIfDuplicateExists = (path, file) => {
 //Returns file path where files needs to be saved.
 export const getFilePath = (mimetype) => {
   let filePath = "";
-  console.log("mimetype", mimetype);
   switch (mimetype) {
     case "application/pdf":
       filePath = documentsPath;
@@ -34,8 +33,8 @@ export const getFilePath = (mimetype) => {
   return filePath;
 };
 
+//The functions deletes a file.
 export const deleteFile = async (file) => {
-  // const filePath = `${path}/${file}`;
   if (!fs.existsSync(file)) {
     return Promise.resolve("");
   }
@@ -47,6 +46,7 @@ export const deleteFile = async (file) => {
   });
 };
 
+//This function moves a file from source to destination.
 export const moveFile = (src, dest) => {
   console.log(src, dest);
   const from = fs.createReadStream(src);
@@ -61,6 +61,7 @@ export const moveFile = (src, dest) => {
   });
 };
 
+//This function doest the MIME mapping based on extension.
 export const mimeMapping = (ext) => {
   switch (ext) {
     case "jpg":
@@ -72,14 +73,17 @@ export const mimeMapping = (ext) => {
   }
 };
 
+//This function returns the file extension based on file name received.
 export const getFileExtension = (fileName) => {
   return fileName.split(".")[1];
 };
 
+//This functions check if file exists or not.
 export const ifFileExists = (filePath) => {
   return fs.existsSync(filePath);
 };
 
+//This functions returns the path of the file.
 export const getFileSource = (fileId) => {
   const mimetype = mimeMapping(getFileExtension(fileId));
   return `${getFilePath(mimetype)}/${fileId}` || "";
