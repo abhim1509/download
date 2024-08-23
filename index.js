@@ -37,7 +37,7 @@ process.on("unhandledRejection", (err) => {
     logger.error(`Received ${signal}. Shutting down gracefully...`);
 
     server.close(() => {
-      console.log("Server closed.");
+      logger.info("Server closed.");
       process.exit(0);
     });
   });

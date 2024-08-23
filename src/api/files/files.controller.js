@@ -1,89 +1,117 @@
 import * as fs from "fs";
 import {
-  getFile,
   deleteFile,
-  getFilePath,
   archivePath,
   moveFile,
-  mimeMapping,
-  getFileExtension,
+  getFileSource,
+  ifFileExists,
 } from "../../services/files/file.service.js";
+import {
+  FILE_NOT_FOUND,
+  FILE_SAVED_SUCCESSFULLY,
+  FILE_DELETED_SUCCESSFULLY,
+  FILE_MOVED_SUCCESSFULLY,
+  STATUS_OK,
+  STATUS_NOT_FOUND,
+  STATUS_INTERNAL_SERVER_ERROR,
+} from "../../services/files/constants.js";
+import { logger } from "../../services/files/logger.service.js";
 
+//This function gets a file by id.
 export const getFileById = async (req, res) => {
   try {
+    logger.info("In getFileById function");
     const { fileId } = req.params;
     const { mode = "preview" } = req.query;
 
-    const filePath = getFile(fileId);
-    console.log(filePath);
+    if (!fileId) {
+      return res.status(400).send("Bad payload");
+    }
+
+    const src = getFileSource(fileId);
+    if (!src || !ifFileExists(src)) {
+      return res.status(STATUS_NOT_FOUND).send(FILE_NOT_FOUND);
+    }
+
     if (mode === "download") {
       res.contentType("application/octet-stream"); // Forces download
       return res.download(filePath, (err) => {
         if (err) {
-          console.error("Error during download:", err);
-          res.status(500).send("Failed to download file.");
+          logger.error(`Error during download: ${err}`);
+          res
+            .status(STATUS_INTERNAL_SERVER_ERROR)
+            .send("Failed to download file.");
         }
       });
     }
-    // Set appropriate content type for preview (e.g., "image/png" or "image/jpeg")
-    // res.contentType("image/png"); // Change this according to your file type
-    // res.contentType("application/pdf");
     const readStream = fs.createReadStream(filePath);
+    // res.contentType("application/pdf");
+    //TODO:: view mode pdf is not working.
 
     readStream.pipe(res).on("error", (err) => {
-      console.error("Error streaming file:", err);
-      res.status(500).send("Error streaming file.");
+      logger.info("Error streaming file:" + err);
+      res.status(STATUS_INTERNAL_SERVER_ERROR).send("Error streaming file.");
     });
   } catch (err) {
-    console.error("Error occurred:", err);
-    res.status(500).json({
+    logger.error(`Error during fetching file: ${err}`);
+    res.status(STATUS_INTERNAL_SERVER_ERROR).json({
       error: err instanceof Error ? err.message : "An unknown error occurred",
     });
   }
 };
 
+//This function uploads a file.
 export const uploadFile = async (req, res, next) => {
-  // console.log("Request", req);
-  res.send("uploaded successfully");
+  logger.info("In uploadFile function");
+
+  res.status(STATUS_OK).send(FILE_SAVED_SUCCESSFULLY);
 };
 
+//This function deletes a file by id.
 export const deleteFileById = async (req, res) => {
   try {
-    const { fileId } = req.params;
-    const mimetype =
-      fileId.split(".")[1] === "jpg" ? "image/jpeg" : "application/pdf";
-    const result = await deleteFile(`${getFilePath(mimetype)}/${fileId}`);
+    logger.info("In deleteFileById function");
 
-    if (!result) {
-      res.status(404);
-      res.send("File not found.");
-      return res;
+    const { fileId } = req.params;
+    const src = getFileSource(fileId);
+    if (!src || !ifFileExists(src)) {
+      return res.status(STATUS_NOT_FOUND).send(FILE_NOT_FOUND);
     }
-    res.status(201);
-    res.send("File deleted successfully");
+
+    await deleteFile(src);
+
+    res.status(STATUS_OK).send(FILE_DELETED_SUCCESSFULLY);
   } catch (err) {
-    console.error("Error occurred:", err);
-    res.status(500).json({
+    logger.error(`Error during file deletion: ${err}`);
+
+    res.status(STATUS_INTERNAL_SERVER_ERROR).json({
       error: err instanceof Error ? err.message : "An unknown error occurred",
     });
   }
 };
 
+//This function archives file by id.
 export const archiveFileById = async (req, res) => {
   try {
-    const { fileId } = req.params;
-    const mimetype = mimeMapping(getFileExtension(fileId));
-    const src = `${getFilePath(mimetype)}/${fileId}`;
-    console.log(src);
-    const dest = `${archivePath}/${fileId}`;
-    const result = moveFile(src, dest);
-    await deleteFile(getFilePath(mimetype), fileId);
+    logger.info("In archiveFileById function");
 
-    res.status(200);
-    res.send("File moved successfully");
+    const { fileId } = req.params;
+    const src = getFileSource(fileId);
+
+    if (!src || !ifFileExists(src)) {
+      return res.status(STATUS_NOT_FOUND).send(FILE_NOT_FOUND);
+    }
+
+    const dest = `${archivePath}/${fileId}`;
+    moveFile(src, dest);
+    await deleteFile(src);
+    logger.info(FILE_DELETED_SUCCESSFULLY);
+    res.status(STATUS_OK).send(FILE_MOVED_SUCCESSFULLY);
+    return;
+    //TODO:: Unknown error occurrence
   } catch (err) {
-    console.error("Error occurred:", JSON.stringify(err));
-    res.status(500).json({
+    logger.error(`Error during file archival: ${err}`);
+    res.status(STATUS_INTERNAL_SERVER_ERROR).json({
       error: err instanceof Error ? err.message : "An unknown error occurred",
     });
   }

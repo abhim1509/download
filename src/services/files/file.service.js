@@ -6,12 +6,6 @@ export const getDirectoryPath = () => {
   return dirname(fileURLToPath(import.meta.url));
 };
 
-// Resolve the file path from the root directory
-export const getFile = (fileId) => {
-  const rootDirectory = getDirectoryPath();
-  return resolve(rootDirectory, "../../../public", fileId);
-};
-
 export const documentsPath = "./public/documents";
 export const imagesPath = "./public/images";
 export const archivePath = "./public/archive";
@@ -40,21 +34,21 @@ export const getFilePath = (mimetype) => {
   return filePath;
 };
 
-export const deleteFile = (path, file) => {
-  const filePath = `${path}/${file}`;
-  console.log(filePath);
-  if (!fs.existsSync(filePath)) {
+export const deleteFile = async (file) => {
+  // const filePath = `${path}/${file}`;
+  if (!fs.existsSync(file)) {
     return Promise.resolve("");
   }
   return new Promise((resolve, reject) => {
-    fs.unlink(filePath, (err) => {
+    fs.unlink(file, (err) => {
       if (err) reject(err);
-      resolve(`Deleted ${filePath}`);
+      resolve(`Deleted ${file}`);
     });
   });
 };
 
 export const moveFile = (src, dest) => {
+  console.log(src, dest);
   const from = fs.createReadStream(src);
   const to = fs.createWriteStream(dest);
 
@@ -80,4 +74,13 @@ export const mimeMapping = (ext) => {
 
 export const getFileExtension = (fileName) => {
   return fileName.split(".")[1];
+};
+
+export const ifFileExists = (filePath) => {
+  return fs.existsSync(filePath);
+};
+
+export const getFileSource = (fileId) => {
+  const mimetype = mimeMapping(getFileExtension(fileId));
+  return `${getFilePath(mimetype)}/${fileId}` || "";
 };

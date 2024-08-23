@@ -4,3 +4,70 @@
 {"level":"info","message":"App is running on port http://localhost:5022"}
 {"level":"info","message":"App is running on port http://localhost:5022"}
 {"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"In archiveFileById function"}
+{"level":"error","message":"Error during file archival: ReferenceError: mimetype is not defined"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"In archiveFileById function"}
+{"level":"error","message":"Error during file archival: ReferenceError: mimetype is not defined"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"In archiveFileById function"}
+{"level":"error","message":"Error during file archival: ReferenceError: mimetype is not defined"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"In archiveFileById function"}
+{"level":"error","message":"Error during file archival: ReferenceError: ifFileExists is not defined"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"In archiveFileById function"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"In archiveFileById function"}
+{"level":"info","message":"In archiveFileById function"}
+{"level":"error","message":"Error during file archival: ReferenceError: mimetype is not defined"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"In archiveFileById function"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"In archiveFileById function"}
+{"level":"info","message":"File deleted from source."}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"In archiveFileById function"}
+{"level":"info","message":"In archiveFileById function"}
+{"level":"info","message":"File deleted from source."}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"In uploadFile function"}
+{"level":"info","message":"In uploadFile function"}
+{"level":"info","message":"In archiveFileById function"}
+{"level":"error","message":"UNCAUGHT EXCEPTION: {}"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"In archiveFileById function"}
+{"level":"info","message":"File deleted from source."}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"In deleteFileById function"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"In deleteFileById function"}
+{"level":"info","message":"In getFileById function"}
+{"level":"info","message":"In getFileById function"}
+{"level":"info","message":"In getFileById function"}
+{"level":"info","message":"In getFileById function"}
+{"level":"info","message":"In getFileById function"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"App is running on port http://localhost:5022"}
+{"level":"info","message":"In archiveFileById function"}
+{"level":"info","message":"File deleted successfully"}
